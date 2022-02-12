@@ -9,9 +9,6 @@ CarParkApp
   indirilebilir.
   
 -> Proje nasıl çalıştırılır:
-  Projemizin Database işlemlerini gerçekleştirebilmesi için ilk önce Postgresql Database indirilmesi gerekir bunun için
-  link aşağıda paylaşılmıştır. Burada işletim sisteminize uygun versiyonu indirip kurulumunu gerçekleştirebilirsiniz.
-  Postgresql Download Link: https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
   Proje indirildikten sonra Intelijj IDEA üzerinden açılmalı, ve proje ayağa kaldırılmalıdır.
   Proje testi için Postman API yi indirmemiz gerekli. Bunun için aşağıdaki linkten indirmeyi gerçekleştirip, kurulumunu
   yapabilirsiniz. Postman API Link: https://www.postman.com/downloads/
@@ -40,15 +37,13 @@ CarParkApp
    URL: http://localhost:40400/carpark/status
  
  -> Projede kullanılan teknolojiler:
-  Projemizde Spring Framework e ilişkin muhtelif library seçenekleri kullanılmıştır. Spring-WEB, Spring Data-Jpa
-  Spring-WEB ile beraber gelen Web Application Server programı olan Embedded Tomcat üzerinden Java tabanlı projemizin
-  Servlet kısmı kontrol edilmiş. Katmanlı mimari kurallarına göre katmanlar oluşturulmuş ve ORM aracı olan Spring Data-Jpa
-  library üzerinden ise veri tabanına bağlantı işlemleri gerçekleştirilmiştir. Bunun yanı sıra katmanlı mimaride katmanlar
-  arası nesne geçişlerinde(Entity-DTO convert) MapStruct kütüphanesinin kabiliyetlerinden faydalanılmıştır. 
-  
-  -> Projeye eklenebilecek yapılar:
-  Projeye Exception Managing yapısı entegre edilebilir. Ve CarParkApp servisimizin farklı requestlere karşı döneceği
-  JSON değerleri düzenlenebilir.
+  Projemizde Spring Framework e ilişkin muhtelif library seçenekleri kullanılmıştır. Spring-WEB, Spring-Validation...
+  Bunlardan ayrı olarak katmanlar arası class converting(Entity-DTO, DTO-Entity) işlemleri için MapStruct Library 
+  kullanılmıştır. Projede Exception Managing yapısı olarak kendi hazırladığım customize library kullanılmış olup
+  bu library "Project Local Repository(Proje içine)" eklenmiştir.(Ekstra görüntülemek için link:     https://github.com/OguzhanTuna/ExceptionLib) belirli noktalarda design pattern kullanımına dikkat edilmiş olup JUnit 
+  library kabiliyetleri ile örnek olması açısından "sadece bir adet" unit test class yazılmıştır. Race condition oluşmaması
+  için belirli noktalarda thread-safe yaklaşım sergilenmiştir. Projede DB bağlantısı ele alınmamış. Veri yapıları üzerinden
+  işlemler gerçekleştirilmiştir.
   
   -> Projeyi geliştiren:
   Oğuzhan Tuna ÖZDOĞAN
