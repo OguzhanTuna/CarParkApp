@@ -42,4 +42,26 @@ public class ParkStatusDto {
     public void setColor(String color) {
         this.color = color;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(!(o instanceof ParkStatusDto))
+            return false;
+
+        if(this == o)
+            return true;
+
+        ParkStatusDto dto = (ParkStatusDto) o; //Downcasting.
+
+        return this.slot == dto.slot
+                && this.plate.equals(dto.plate)
+                && this.color.equals(dto.color);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Slot: %d, Plate: %s, Color: %s\n", slot, plate, color);
+    }
 }

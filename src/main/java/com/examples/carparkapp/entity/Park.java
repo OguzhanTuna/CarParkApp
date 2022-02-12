@@ -1,17 +1,11 @@
 package com.examples.carparkapp.entity;
 
-import javax.persistence.*;
 
+import java.io.Serializable;
+import java.util.Objects;
 
-@Entity
-@Table(name = "t_park", schema = "park")
-public class Park {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "park_id")
+public class Park implements Serializable {
     private long parkId;
-
-    @Column(name = "status")
     private String status;
     private String plate;
     private String color;
@@ -69,5 +63,40 @@ public class Park {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(plate, color, status);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null || this.getClass() != o.getClass())
+            return false;
+
+        if(this == o)
+            return true;
+
+        Park park = (Park)o; //Downcasting
+
+        return this.plate.equals(park.plate)
+                && this.color.equals(park.color)
+                && this.status.equals(park.status);
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        return sb
+                .append("Slot: ").append(parkId)
+                .append(", Plate: ").append(plate)
+                .append(", Color: ").append(color)
+                .append(", Status: ").append(status)
+                .toString();
     }
 }

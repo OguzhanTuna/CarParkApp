@@ -6,14 +6,18 @@ import com.examples.carparkapp.entity.Park;
 import com.examples.carparkapp.mapper.IParkMapper;
 import com.examples.carparkapp.repository.abstraction.ICarParkRepository;
 import com.examples.carparkapp.service.abstraction.ICarParkService;
+import com.examples.exceptionlib.exceptionlib.util.FunctionalExceptionUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
-import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@Validated
 public class CarParkService implements ICarParkService {
     private final ICarParkRepository carParkRepository;
     private final IParkMapper parkMapper;
@@ -26,6 +30,23 @@ public class CarParkService implements ICarParkService {
                 .collect(Collectors.toList());
     }
 
+    public String includeParkCallback(IncludeParkDto parkDto)
+    {
+        long availableParkSlot = carParkRepository.getAvailableParkId();
+
+        if(availableParkSlot == 0) return "Garage is full";
+        else carParkRepository.updateAvailableSlotForPark(availableParkSlot, parkDto.getPlate(), parkDto.getColor());
+
+        return "Allocated " + availableParkSlot + " slot.";
+    }
+
+    public String leaveCallback(long parkId)
+    {
+        carParkRepository.updateSlotForLeaveByParkId(parkId);
+
+        return "Emptied " + parkId + " slot.";
+    }
+
     //Constructor Injection. No @Autowired annotation with Spring 4.3
     public CarParkService(ICarParkRepository carParkRepository, IParkMapper parkMapper)
     {
@@ -36,33 +57,24 @@ public class CarParkService implements ICarParkService {
     @Override
     public List<ParkStatusDto> status()
     {
-        Iterable<Park> parkList = carParkRepository.findAll();
-
-        return this.doWorkForParkStatusDtoList(parkList);
+        return FunctionalExceptionUtil
+                .doWorkForServiceException(() -> this.doWorkForParkStatusDtoList(carParkRepository.findAll()),
+                "Service Exception for 'STATUS' method");
     }
 
     @Override
-    @Transactional
-    public String includePark(IncludeParkDto parkDto)
+    public String includePark(@NotNull @Valid @Validated(IncludeParkDto.class) IncludeParkDto parkDto)
     {
-        long availableParkSlot = carParkRepository.getAvailableParkId();
-
-        if(availableParkSlot == 0) return "Garage is full";
-        else carParkRepository.updateAvailableSlotForPark(availableParkSlot, parkDto.getPlate(), parkDto.getColor());
-
-        return "Allocated " + availableParkSlot + " slot.";
+        return FunctionalExceptionUtil
+                .doWorkForServiceException(() -> this.includeParkCallback(parkDto),
+                        "Service Exception for 'INCLUDE PARK' method");
     }
 
     @Override
-    @Transactional
-    public void leave(long parkId)
+    public String leave(long parkId)
     {
-        carParkRepository.updateAvailableSlotForLeave(parkId);
-    }
-
-    @Override
-    public Park save(Park park)
-    {
-        return carParkRepository.save(park);
+        return FunctionalExceptionUtil
+                .doWorkForServiceException(() -> this.leaveCallback(parkId),
+                        "Service Exception for 'LEAVE' method");
     }
 }

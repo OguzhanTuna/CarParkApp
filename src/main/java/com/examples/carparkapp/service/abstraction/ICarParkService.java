@@ -2,8 +2,10 @@ package com.examples.carparkapp.service.abstraction;
 
 import com.examples.carparkapp.dto.IncludeParkDto;
 import com.examples.carparkapp.dto.ParkStatusDto;
-import com.examples.carparkapp.entity.Park;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface ICarParkService {
@@ -11,9 +13,7 @@ public interface ICarParkService {
 
     List<ParkStatusDto> status();
 
-    String includePark(IncludeParkDto parkDto);
+    String includePark(@NotNull @Valid @Validated(IncludeParkDto.class) IncludeParkDto parkDto);
 
-    void leave(long parkId);
-
-    Park save(Park park);
+    String leave(long parkId);
 }
